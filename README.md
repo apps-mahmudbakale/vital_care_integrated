@@ -1,58 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# <div align="center"><img src="public/assets/img/branding/logo.png" alt="EMR Logo" width="80" height="auto"></div>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Electronic Medical Record (EMR) System
 
-## About Laravel
+A comprehensive, Lara-based Electronic Medical Record (EMR) system designed to streamline hospital operations, including patient management, clinical charting, laboratory & radiology requests, billing, and pharmacy management.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Patient Management
+*   **Registration**: Capture comprehensive patient demographics, contact details, and next of kin information.
+*   **Hospital Numbering**: Auto-generated hospital numbers with customizable prefixes.
+*   **Patient Dashboard**: Centralized view of patient history, visits, and active requests.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Clinical Charting & Consultation
+*   **Vitals Tracking**: Record and monitor patient vitals (BP, Temperature, Pulse, etc.) with historical trends.
+*   **Complaint & Diagnosis**: Document presenting complaints and diagnoses (ICD-10 support).
+*   **Clinical Notes**: Rich text editor for detailed clinical notes and treatment plans.
+*   **Direct Ordering**: Order lab tests, radiology scans, and prescriptions directly from the consultation screen.
 
-## Learning Laravel
+### 3. Laboratory Management
+*   **Request Management**: Workflow for creating, processing, and completing lab requests.
+*   **Result Entry**: dedicated interface for entering parameter-based results with auto-calculated remarks (High/Low/Normal).
+*   **Approval Workflow**: Mandatory approval step for results before they can be printed.
+*   **Branded Reports**: Professional, customizable print templates with hospital branding and digital signatures.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 4. Radiology Management
+*   **Request Tracking**: Manage radiology requests from order to completion.
+*   **Rich Text Findings**: Trix editor integration for detailed, formatted radiology reports.
+*   **DICOM Integration**: Launch external DICOM viewers (like Weasis) directly from the dashboard.
+*   **Approval & Printing**: Secure approval workflow and professional report printing.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 5. Billing & Finance
+*   **Invoicing**: Generate bills for services (Consultation, Lab, Radiology, etc.).
+*   **Payment Processing**: Record payments and issue receipts.
+*   **Service Gating**: Enforce payment checks before services (e.g., Lab/Radiology findings) can be rendered.
 
-## Laravel Sponsors
+### 6. Pharmacy & Inventory
+*   **Drug Requests**: Manage prescriptions and dispensing.
+*   **Stock Management**: Track drug inventory, batches, and expiration dates.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 7. Administration & Settings
+*   **Role-Based Access**: Granular permissions for Doctors, Nurses, Lab Scientists, Radiologists, and Admin.
+*   **System Configuration**: Customize hospital name, logo, contact info (Email, Phone, Address), and prefixes.
 
-### Premium Partners
+## Technology Stack
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+*   **Framework**: [Laravel 11.x](https://laravel.com)
+*   **Frontend**: Blade Templates, Livewire 3, Alpine.js, Bootstrap 5
+*   **Database**: MySQL
+*   **Rich Text Editor**: Trix / Summernote
+*   **Charts**: Larapex Charts
+
+## Installation
+
+1.  **Clone the repository**
+    ```bash
+    git clone <repository-url>
+    cd emr
+    ```
+
+2.  **Install PHP Dependencies**
+    ```bash
+    composer install
+    ```
+
+3.  **Install Node Dependencies**
+    ```bash
+    npm install && npm run build
+    ```
+
+4.  **Environment Setup**
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    php artisan storage:link
+    ```
+    *   Configure your database credentials in the `.env` file.
+
+5.  **Database Migration & Seeding**
+    ```bash
+    php artisan migrate
+    php artisan db:seed
+    ```
+
+6.  **Run the Application**
+    ```bash
+    php artisan serve
+    ```
+
+## Usage
+
+*   **Login**: Access the system via `/login`. Default admin credentials (if seeded).
+*   **Dashboard**: Overview of daily activities.
+*   **Sidebar**: Navigate to Patients, Appointments, Lab, Radiology, etc.
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Please follow the standard pull request workflow:
+1.  Fork the repository.
+2.  Create a feature branch (`git checkout -b feature/amazing-feature`).
+3.  Commit your changes (`git commit -m 'Add some amazing feature'`).
+4.  Push to the branch (`git push origin feature/amazing-feature`).
+5.  Open a Pull Request.
 
 ## License
 
