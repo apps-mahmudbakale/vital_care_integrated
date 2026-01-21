@@ -136,9 +136,24 @@
                                         <i class="icon-base ti tabler-eye icon-xs me-2"></i> View Request
                                     </a>
 
-                                    <a href='weasis://?%24dicom%3Aget+-r+https%3A%2F%2Fnroduit.github.io%2Fdemo-archive%2Fus-palette.dcm"' class="dropdown-item">
-                                        <i class="icon-base ti tabler-photo-scan icon-xs me-2"></i> launch Image Viewer
-                                    </a>
+                                    @if($request->result && $request->result->image)
+                                        @php
+                                            $imagePath = $request->result->image;
+                                            $extension = pathinfo($imagePath, PATHINFO_EXTENSION);
+                                            $url = asset('storage/' . $imagePath);
+                                          
+                                        @endphp
+
+                                        @if(empty($extension) || in_array(strtolower($extension), ['dcm']))
+                                            <a href="weasis://?%24dicom%3Aget+-r+{{ urlencode($url) }}" class="dropdown-item">
+                                                <i class="icon-base ti tabler-photo-scan icon-xs me-2"></i> Launch Image Viewer
+                                            </a>
+                                        @else
+                                            <a href="{{ $url }}" target="_blank" class="dropdown-item">
+                                                <i class="icon-base ti tabler-eye icon-xs me-2"></i> View Image/Document
+                                            </a>
+                                        @endif
+                                    @endif
 
                                     @if($request->result?->is_approved)
                                     <a class="dropdown-item" href="{{ route('app.radiology-requests.print', $request->id) }}" target="_blank">

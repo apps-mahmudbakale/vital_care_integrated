@@ -60,12 +60,20 @@
         </div>
     </div>
 
-    <form action="{{ route('app.radiology-requests.add_findings') }}" method="POST" id="radiology-findings-form" class="mt-2">
+    <form action="{{ route('app.radiology-requests.add_findings') }}" method="POST" id="radiology-findings-form" class="mt-2" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="patient_id" value="{{ $radiologyRequest->patient_id }}">
         <input type="hidden" name="radiology_request_id" value="{{ $radiologyRequest->id }}">
         <input type="hidden" name="radiology_test_id" value="{{ $radiologyRequest->radiology_test_id }}">
         
+        <div class="mt-4 px-1">
+            <label class="form-label fw-bold text-heading">
+                <i class="ti tabler-upload me-1"></i> Upload Images / DICOM
+            </label>
+            <input type="file" name="file" class="form-control" accept=".zip,.dcm,.jpg,.jpeg,.png,.pdf">
+            <div class="form-text">Upload single images or a ZIP archive containing DICOM folders (Max 50MB).</div>
+        </div>
+
         <div class="mt-4 px-1">
             <label class="form-label fw-bold text-heading">
                 <i class="ti tabler-list-details me-1"></i> Radiologist's Report / Findings

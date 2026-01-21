@@ -96,6 +96,11 @@ class LabRequests extends Base
     {
         $patients = \App\Models\Patient::with('user')->get();
         $labRequests = LabRequest::query()
+            ->when(auth()->user()->hasRole('patient'), function ($query) {
+                $query->whereHas('patient', function ($q) {
+                    $q->where('user_id', auth()->id());
+                });
+            })
             ->when($this->patientId, function ($query) {
                 $query->where('patient_id', $this->patientId);
             })

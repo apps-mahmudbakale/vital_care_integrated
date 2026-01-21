@@ -6,6 +6,7 @@ use App\Models\RadiologyRequest;
 use App\Models\RadiologyResult;
 use App\Settings\SystemSettings;
 use Illuminate\Http\Request;
+use App\Services\ServiceRequestHandler;
 
 class RadiologyRequestController extends Controller
 {
@@ -89,7 +90,10 @@ class RadiologyRequestController extends Controller
 
     public function findings(RadiologyRequest $radiologyRequest)
     {
-        if (!$radiologyRequest->isPaid()) {
+        $serviceHandler = new ServiceRequestHandler();
+        $service = "Radiology:" . $radiologyRequest->test->name;
+        $paid = $serviceHandler->isBilled($radiologyRequest->radiology_test_id, $service, $radiologyRequest->request_ref);
+        if (!$paid) {
             return "<script>
                 $('#global-modal').modal('hide');
                 Swal.fire({
@@ -111,6 +115,7 @@ class RadiologyRequestController extends Controller
         $request->validate([
             'radiology_request_id' => 'required|exists:radiology_requests,id',
             'findings' => 'required',
+            'file' => 'nullable|file|mimes:zip,jpg,jpeg,png,pdf,dcm|max:51200' // 50MB max
         ]);
 
         $radiologyRequest = RadiologyRequest::findOrFail($request->radiology_request_id);
@@ -119,14 +124,42 @@ class RadiologyRequestController extends Controller
             return back()->with('error', 'Cannot save findings. Payment is required.');
         }
 
+        $imagePath = null;
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $timestamp = now()->format('His');
+            $folderPath = "radiology/{$radiologyRequest->patient->hospital_no}/" . now()->format('Y-m-d') . "/{$timestamp}";
+            
+            if ($file->getClientOriginalExtension() === 'zip') {
+                $zip = new \ZipArchive;
+                if ($zip->open($file->getPathname()) === TRUE) {
+                    $extractPath = storage_path('app/public/' . $folderPath);
+                    if (!is_dir($extractPath)) {
+                        mkdir($extractPath, 0755, true);
+                    }
+                    $zip->extractTo($extractPath);
+                    $zip->close();
+                    $imagePath = $folderPath; // Point to the directory
+                }
+            } else {
+                $imagePath = $file->store($folderPath, 'public');
+            }
+        }
+
+        $data = [
+            'patient_id' => $radiologyRequest->patient_id,
+            'radiology_test_id' => $radiologyRequest->radiology_test_id,
+            'user_id' => auth()->id(),
+            'findings' => $request->findings,
+        ];
+
+        if ($imagePath) {
+            $data['image'] = $imagePath;
+        }
+
         RadiologyResult::updateOrCreate(
             ['radiology_request_id' => $radiologyRequest->id],
-            [
-                'patient_id' => $radiologyRequest->patient_id,
-                'radiology_test_id' => $radiologyRequest->radiology_test_id,
-                'user_id' => auth()->id(),
-                'findings' => $request->findings,
-            ]
+            $data
         );
 
         $radiologyRequest->update([

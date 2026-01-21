@@ -65,6 +65,11 @@ class RadiologyRequests extends Base
         $patients = \App\Models\Patient::with('user')->get();
         $radiologyRequests = RadiologyRequest::query()
             ->with(['patient.user', 'test', 'user', 'result'])
+            ->when(auth()->user()->hasRole('patient'), function ($query) {
+                $query->whereHas('patient', function ($q) {
+                    $q->where('user_id', auth()->id());
+                });
+            })
             ->when($this->patientId, function ($query) {
                 $query->where('patient_id', $this->patientId);
             })

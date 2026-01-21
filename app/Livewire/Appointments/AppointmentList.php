@@ -84,6 +84,11 @@ class AppointmentList extends Component
     public function getEvents()
     {
         return Appointment::with(['patient.user', 'appointmentType'])
+            ->when(auth()->user()->hasRole('patient'), function($query) {
+                 $query->whereHas('patient', function($q) {
+                     $q->where('user_id', auth()->id());
+                 });
+            })
             ->get()
             ->map(function ($appointment) {
                 return [
@@ -123,6 +128,11 @@ class AppointmentList extends Component
     public function render()
     {
         $appointments = Appointment::with(['patient.user', 'appointmentType', 'clinic', 'specialty'])
+            ->when(auth()->user()->hasRole('patient'), function($query) {
+                 $query->whereHas('patient', function($q) {
+                     $q->where('user_id', auth()->id());
+                 });
+            })
             ->when($this->search, function($query) {
                 $query->whereHas('patient', function($q) {
                     $q->whereHas('user', function($uq) {

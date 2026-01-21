@@ -24,6 +24,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        if (auth()->user()->hasRole('patient')) {
+            return view('patient-dashboard');
+        }
         return view('dashboard');
     }
 

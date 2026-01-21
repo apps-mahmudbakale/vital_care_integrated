@@ -55,6 +55,7 @@ class RadiologyRequestForm extends Component
                 'patient_id' => $this->patient->id,
                 'radiology_test_id' => $row['radiology_test_id'],
                 'user_id' => Auth::id(),
+                'request_ref' => $billRef,
                 'request_note' => $row['request_note'],
                 'priority' => $row['priority'],
                 'status' => $this->status,

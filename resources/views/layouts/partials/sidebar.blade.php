@@ -32,6 +32,7 @@
                 <div data-i18n="Dashboard">Dashboard</div>
             </a>
         </li>
+        @unlessrole('patient')
         @can('read-users')
             <li class="menu-item {{ request()->is('app/users*') || request()->is('app/roles*') ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -53,14 +54,16 @@
                 </ul>
             </li>
         @endcan
-        @can('read-appointments')
-            <li class="menu-item {{ request()->is('app/appointments*') ? 'active' : '' }}">
-                <a href="{{ route('app.appointments.index') }}" class="menu-link">
-                    <i class="icon-base ti tabler-calendar icon-22px me-3"></i>
-                    <div>Appointments</div>
-                </a>
-            </li>
-        @endcan
+        @endunlessrole
+
+        <li class="menu-item {{ request()->is('app/appointments*') ? 'active' : '' }}">
+            <a href="{{ route('app.appointments.index') }}" class="menu-link">
+                <i class="icon-base ti tabler-calendar icon-22px me-3"></i>
+                <div>Appointments</div>
+            </a>
+        </li>
+
+        @unlessrole('patient')
         @if($settings->show_patients || $settings->show_admission || $settings->show_appointments)
             @if($settings->show_patients)
                 @can('read-patients')
@@ -73,6 +76,8 @@
                 @endcan 
             @endif
         @endif
+        @endunlessrole
+
         <li class="menu-item {{ request()->is('app/lab-requests*') ? 'active' : '' }}">
             <a href="{{ route('app.lab-requests.index') }}" class="menu-link">
                 <i class="icon-base ti tabler-flask icon-22px me-3"></i>
@@ -85,12 +90,17 @@
                 <div>Radiology Requests</div>
             </a>
         </li>
+
+        @unlessrole('patient')
         <li class="menu-item {{ request()->is('app/billing*') ? 'active' : '' }}">
             <a href="{{ route('app.billing.index') }}" class="menu-link">
                 <i class="icon-base ti tabler-receipt icon-22px me-3"></i>
                 <div>Billing</div>
             </a>
         </li>
+        @endunlessrole
+
+        @unlessrole('patient')
         @can('read-settings')
             <li class="menu-item {{ request()->is('app/settings*') ? 'active' : '' }}">
                 <a href="{{ route('app.settings.index') }}" class="menu-link">
@@ -99,6 +109,7 @@
                 </a>
             </li>
         @endcan
+        @endunlessrole
     </ul>
 </aside>
 
